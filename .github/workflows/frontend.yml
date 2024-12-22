@@ -24,14 +24,12 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: |
-          cd client
-          npm install
+        working-directory: client
+        run: npm install
 
       - name: Build Frontend
-        run: |
-          cd client
-          npm run build
+        working-directory: client
+        run: npm run build
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
