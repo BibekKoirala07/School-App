@@ -1,0 +1,60 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env: 
+  CI: false
+  
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' 
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: |
+          cd client
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd client
+          npm run build
+
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          # personal_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically provides this token for use
+          path: ./client/dist  # The folder with your built frontend assets
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == "refs/heads/main"
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: production-files
+          path: ./build
+
+      - name: Deploy to Github pages
+        uses: peaceiris/acions-gh-pages@v3
+        with: 
+          github_token: ${{}}
+          publish_dir: ./build
