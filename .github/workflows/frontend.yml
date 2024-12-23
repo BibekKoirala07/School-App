@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: '18.20.5' 
           cache: "npm"
+          cache-dependency-path: './client/package-lock.json'
 
       - name: Install Dependencies
         working-directory: client
@@ -49,10 +50,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: production-files
-          path: ./build
+          path: ./dist
 
       - name: Deploy to Github pages
         uses: peaceiris/actions-gh-pages@v3
         with: 
           github_token: ${{ secrets.TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./dist
