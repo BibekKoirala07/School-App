@@ -1,21 +1,20 @@
+# Use the Node.js LTS base image
+FROM node:18-alpine
 
-FROM node:18 AS build
-
-
+# Set the working directory inside the container
 WORKDIR /app
 
+# Copy package.json and package-lock.json for dependency installation
 COPY package*.json ./
 
-RUN npm install --production
+# Install dependencies
+RUN npm install 
 
+# Copy the rest of the application code to the working directory
 COPY . .
 
-FROM node:18-slim
-
-WORKDIR /app
-
-COPY --from=build /app .
-
+# Expose the application port (replace 3000 with your app's port if different)
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Define the command to run the application
+CMD ["node", "server.js"]
