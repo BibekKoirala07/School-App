@@ -1,8 +1,15 @@
 const express = require("express");
-const AWS = require("aws-sdk");
-require("aws-sdk/lib/maintenance_mode_message").suppress = true;
+
+const path = require("path");
 
 const cors = require("cors");
+
+const {
+  GetObjectCommand,
+  S3Client,
+  PutObjectCommand,
+} = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/client-s3-request-presigner");
 
 require("dotenv").config({ path: "./config/.env" });
 
@@ -15,23 +22,65 @@ const region = process.env.AWS_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
+const s3Client = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
+
 const s3 = new AWS.S3({
   accessKeyId: accessKeyId,
   secretAccessKey: secretAccessKey,
   region: region,
 });
 
+app.use(express.static(path.join(__dirname, "public")));
+
 app.get("/", (req, res) => {
-  return res.send("Server is running");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "about.html"));
+});
+
+app.get("/contact", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "contact.html"));
 });
 
 app.get("/health", (req, res) => {
-  return res.send("Server is running");
+  return res.status(200).send({ message: "Server is running" });
 });
 
 app.get("/test", (req, res) => {
-  return res.send("Server is running");
+  return res.status(200).send({ message: "Server is running" });
 });
+
+async function getPresignedUrl(fileName) {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: fileName,
+  });
+
+  const url = await getSignedUrl(s3Client, command, {
+    expiresIn: 3600,
+  });
+
+  return url;
+}
+
+async function putObject(fileName, contentType) {
+  const command = new PutObjectCommand({
+    bucketName: bucketName,
+    Key: "/uploads/" + fileName,
+    contentType: contentType,
+  });
+
+  const url = await getSignedUrl(S3Client, command, {});
+  return url;
+}
 
 app.get("/api/get-all-images", (req, res) => {
   const params = {
