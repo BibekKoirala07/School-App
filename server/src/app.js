@@ -1,17 +1,27 @@
 const express = require("express");
-
 const path = require("path");
-
 const cors = require("cors");
+const fs = require("fs");
+
+require("dotenv").config({ path: path.resolve(__dirname, "./config/.env") });
 
 const {
   GetObjectCommand,
   S3Client,
   PutObjectCommand,
+  ListObjectsV2Command,
 } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/client-s3-request-presigner");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-require("dotenv").config({ path: "./config/.env" });
+const envPath = path.resolve(__dirname, "./config/.env");
+
+fs.access(envPath, fs.constants.F_OK, (err) => {
+  if (err) {
+    console.error("Error: .env file not found or inaccessible at", envPath);
+  } else {
+    console.log(".env file exists and is accessible at", envPath);
+  }
+});
 
 const app = express();
 app.use(express.json());
@@ -28,12 +38,6 @@ const s3Client = new S3Client({
     accessKeyId,
     secretAccessKey,
   },
-});
-
-const s3 = new AWS.S3({
-  accessKeyId: accessKeyId,
-  secretAccessKey: secretAccessKey,
-  region: region,
 });
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -58,58 +62,46 @@ app.get("/test", (req, res) => {
   return res.status(200).send({ message: "Server is running" });
 });
 
+console.log("process.env", bucketName, region, accessKeyId, secretAccessKey);
+
 async function getPresignedUrl(fileName) {
   const command = new GetObjectCommand({
     Bucket: bucketName,
     Key: fileName,
   });
-
-  const url = await getSignedUrl(s3Client, command, {
-    expiresIn: 3600,
-  });
-
-  return url;
+  return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 }
 
 async function putObject(fileName, contentType) {
   const command = new PutObjectCommand({
-    bucketName: bucketName,
-    Key: "/uploads/" + fileName,
-    contentType: contentType,
+    Bucket: bucketName,
+    Key: `/${fileName}`,
+    ContentType: contentType,
   });
-
-  const url = await getSignedUrl(S3Client, command, {});
-  return url;
+  return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 }
 
-app.get("/api/get-all-images", (req, res) => {
-  const params = {
-    Bucket: bucketName,
-  };
+app.get("/api/get-all-images", async (req, res) => {
+  try {
+    const command = new ListObjectsV2Command({ Bucket: bucketName });
+    const data = await s3Client.send(command);
 
-  s3.listObjectsV2(params, (err, data) => {
-    console.log("data", data);
-    if (err) {
-      console.error("Error listing objects", err);
-      return res.status(500).json({ message: "Could not list objects." });
-    }
+    const files = data.Contents.map((item) => ({
+      name: item.Key,
+      url: `https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`,
+      size: item.Size,
+      lastModified: item.LastModified,
+    }));
 
-    const files = data.Contents.map((item) => {
-      return {
-        name: item.Key,
-        url: `https://${bucketName}.s3.${region}.amazonaws.com/${item.Key}`,
-        size: item.Size,
-        lastModified: item.LastModified,
-      };
-    });
-    return res.json({ data: files });
-  });
+    res.json({ data: files });
+  } catch (err) {
+    console.error("Error listing objects", err);
+    res.status(500).json({ message: "Could not list objects." });
+  }
 });
 
-app.post("/api/generate-presigned-url", (req, res) => {
+app.post("/api/generate-presigned-url", async (req, res) => {
   const { fileName, fileType } = req.body;
-
-  console.log("fileName, fileType", fileName, fileType);
 
   if (!fileName || !fileType) {
     return res
@@ -117,24 +109,15 @@ app.post("/api/generate-presigned-url", (req, res) => {
       .json({ message: "File name and file type are required." });
   }
 
-  const params = {
-    Bucket: bucketName,
-    Key: fileName,
-    ContentType: fileType,
-    Expires: 300,
-  };
-
-  s3.getSignedUrl("putObject", params, (err, url) => {
-    if (err) {
-      console.error("Error generating pre-signed URL", err);
-      return res
-        .status(500)
-        .json({ message: "Could not generate pre-signed URL." });
-    }
+  try {
+    const url = await putObject(fileName, fileType);
 
     console.log("url", url);
     res.json({ url });
-  });
+  } catch (err) {
+    console.error("Error generating pre-signed URL", err);
+    res.status(500).json({ message: "Could not generate pre-signed URL." });
+  }
 });
 
 module.exports = app;

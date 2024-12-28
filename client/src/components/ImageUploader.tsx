@@ -5,7 +5,9 @@ const ImageUploader: React.FC = () => {
   const fullURL =
     import.meta.env.VITE_NODE_ENV == "production"
       ? import.meta.env.VITE_PROD_BACKEND_URL
-      : "http://localhost:3000";
+      : import.meta.env.VITE_DEV_BACKEND_URL;
+
+  console.log("fullURL", fullURL);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -36,8 +38,6 @@ const ImageUploader: React.FC = () => {
           fileType: selectedFile.type,
         }
       );
-
-      console.log("response", response);
 
       const { url } = response.data;
 

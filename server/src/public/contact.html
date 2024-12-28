@@ -3,27 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact</title>
+    <title>Contact Us</title>
     <style>
+      /* General Styles */
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
       }
+
+      /* Navigation Bar */
       nav {
-        background-color: #333;
+        background-color: #2c3e50;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         padding: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
       }
       nav a {
         color: white;
         text-decoration: none;
         margin: 0 15px;
+        font-weight: 500;
+        transition: color 0.3s ease;
       }
       nav a:hover {
-        text-decoration: underline;
+        color: #1abc9c;
       }
+
+      /* Container */
       .container {
+        max-width: 800px;
+        margin: 2rem auto;
         padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .container h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      .container p {
+        line-height: 1.6;
+      }
+
+      /* Contact Form */
+      .contact-form {
+        margin-top: 1.5rem;
+      }
+      .contact-form input,
+      .contact-form textarea {
+        width: 100%;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      .contact-form button {
+        background-color: #1abc9c;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .contact-form button:hover {
+        background-color: #16a085;
       }
     </style>
   </head>
@@ -36,9 +89,20 @@
     <div class="container">
       <h1>Contact Us</h1>
       <p>
-        Feel free to reach out through our contact form or email us at
-        contact@example.com.
+        Have questions or need support? Feel free to reach out through our
+        contact form below or email us at
+        <a
+          href="mailto:contact@example.com"
+          style="color: #1abc9c; text-decoration: none"
+          >contact@example.com</a
+        >.
       </p>
+      <form class="contact-form">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
     </div>
   </body>
 </html>

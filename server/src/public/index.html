@@ -6,16 +6,17 @@
     <title>Home</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f4f4f9;
+        background-color: #eef2f3;
         color: #333;
         line-height: 1.6;
       }
 
+      /* Navigation Bar */
       nav {
-        background-color: #333;
+        background-color: #2c3e50;
         padding: 1rem;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         position: sticky;
@@ -27,41 +28,63 @@
         color: white;
         text-decoration: none;
         margin: 0 15px;
-        font-weight: bold;
+        font-weight: 600;
+        transition: color 0.3s ease;
       }
 
       nav a:hover {
-        text-decoration: underline;
+        color: #1abc9c;
       }
 
+      /* Container */
       .container {
         padding: 2rem;
         max-width: 800px;
         margin: 2rem auto;
         background: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
       }
 
       h1 {
-        color: #444;
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        text-align: center;
+        color: #2c3e50;
+        font-size: 2.8rem;
+        margin-bottom: 1.5rem;
       }
 
       p {
         font-size: 1.2rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         text-align: justify;
       }
 
+      /* Button */
+      .btn {
+        display: inline-block;
+        background-color: #1abc9c;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #16a085;
+      }
+
+      /* Footer */
       footer {
-        background-color: #333;
+        background-color: #2c3e50;
         color: white;
         text-align: center;
-        padding: 1rem 0;
+        padding: 1.5rem 0;
         margin-top: 2rem;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
       }
     </style>
   </head>
@@ -72,13 +95,14 @@
       <a href="contact.html">Contact</a>
     </nav>
     <div class="container">
-      <h1>Welcome to the Home Page</h1>
+      <h1>Welcome to Our Website</h1>
       <p>
-        This is the home page of our website. Here, you can find information
-        about our services and how we can help you achieve your goals. Explore
-        the rest of the site to learn more about us.
+        Discover the perfect place to learn about our services and explore how
+        we can assist you in achieving your goals. Navigate through our site to
+        uncover all the exciting features we have to offer.
       </p>
+      <a href="about.html" class="btn">Learn More</a>
     </div>
-    <footer>&copy; 2024 Your Website. All rights reserved.</footer>
+    <footer>&copy; 2024 Your Website. Designed with ❤️.</footer>
   </body>
 </html>
