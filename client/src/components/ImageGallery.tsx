@@ -13,12 +13,7 @@ const ImageGallery: React.FC = () => {
       ? import.meta.env.VITE_PROD_BACKEND_URL
       : import.meta.env.VITE_DEV_BACKEND_URL;
 
-  console.log(
-    "process.env",
-    import.meta.env.VITE_NODE_ENV,
-    import.meta.env.VITE_PROD_BACKEND_URL,
-    import.meta.env.VITE_DEV_BACKEND_URL
-  );
+  console.log("url", url);
 
   const [images, setImages] = useState<images[]>([]);
   const [error, setError] = useState<string | null>(null);
