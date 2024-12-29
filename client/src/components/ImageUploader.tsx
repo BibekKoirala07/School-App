@@ -7,8 +7,6 @@ const ImageUploader: React.FC = () => {
       ? import.meta.env.VITE_PROD_BACKEND_URL
       : import.meta.env.VITE_DEV_BACKEND_URL;
 
-  console.log("fullURL", fullURL);
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
