@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const ImageUploader: React.FC = () => {
-  const fullURL =
-    import.meta.env.VITE_NODE_ENV == "production"
-      ? import.meta.env.VITE_PROD_BACKEND_URL
-      : import.meta.env.VITE_DEV_BACKEND_URL;
+  const fullURL = import.meta.env.VITE_PROD_BACKEND_URL;
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -29,23 +26,38 @@ const ImageUploader: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(
-        fullURL + "/api/generate-presigned-url",
-        {
+      const response = await fetch(fullURL + "/api/generate-presigned-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           fileName: selectedFile.name,
           fileType: selectedFile.type,
-        }
-      );
+        }),
+      });
+      const data = await response.json();
 
-      console.log("response:", response.data);
+      console.log("response:", response);
+      console.log("data", data);
 
-      const { url } = response.data;
+      const url = data.url;
 
-      await axios.put(url, selectedFile, {
+      const uploadResponse = await fetch(url, {
+        method: "PUT",
         headers: {
           "Content-Type": selectedFile.type,
         },
+        body: selectedFile,
       });
+
+      const uploadData = await uploadResponse.json();
+      console.log("uploadResponse:", uploadResponse);
+      console.log("uploadData:", uploadData);
+
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed with status ${uploadResponse.status}`);
+      }
 
       alert("Image uploaded successfully!");
       setSelectedFile(null);

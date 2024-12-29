@@ -19,7 +19,7 @@ fs.access(envPath, fs.constants.F_OK, (err) => {
   if (err) {
     console.error("Error: .env file not found or inaccessible at", envPath);
   } else {
-    console.log(".env file exists and is accessible at", envPath);
+    console.log("Success");
   }
 });
 
@@ -28,11 +28,13 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
+      "https://bibekkoirala07.github.io",
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://bibekkoirala07.github.io/School-App/",
     ],
-    methods: "GET,POST,PUT,DELETE,PATCH",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "x-amz-acl", "Authorization"],
+    exposedHeaders: ["ETag"],
   })
 );
 
@@ -70,8 +72,6 @@ app.get("/health", (req, res) => {
 app.get("/test", (req, res) => {
   return res.status(200).send({ message: "Server is running" });
 });
-
-console.log("process.env", bucketName, region, accessKeyId, secretAccessKey);
 
 async function getPresignedUrl(fileName) {
   const command = new GetObjectCommand({

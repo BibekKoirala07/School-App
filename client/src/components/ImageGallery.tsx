@@ -28,7 +28,8 @@ const ImageGallery: React.FC = () => {
         console.error("Failed to fetch images:", data);
       }
     } catch (error) {
-      console.error("Error fetching images:", error);
+      setError("Some Error Occurred");
+      console.error("Failed to fetch images:", error);
     }
   };
   useEffect(() => {
