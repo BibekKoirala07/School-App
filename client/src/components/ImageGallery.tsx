@@ -16,8 +16,6 @@ const ImageGallery: React.FC = () => {
   const [images, setImages] = useState<images[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("Images", images);
-
   const fetchData = async () => {
     try {
       const response = await fetch(url + "/api/get-all-images");

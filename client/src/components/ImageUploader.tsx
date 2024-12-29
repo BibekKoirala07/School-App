@@ -37,6 +37,8 @@ const ImageUploader: React.FC = () => {
         }
       );
 
+      console.log("response:", response.data);
+
       const { url } = response.data;
 
       await axios.put(url, selectedFile, {

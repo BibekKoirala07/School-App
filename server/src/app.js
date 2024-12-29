@@ -27,8 +27,12 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://bibekkoirala07.github.io",
-    methods: "GET,POST,PUT,DELETE",
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://bibekkoirala07.github.io/School-App/",
+    ],
+    methods: "GET,POST,PUT,DELETE,PATCH",
   })
 );
 
