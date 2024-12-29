@@ -25,7 +25,12 @@ fs.access(envPath, fs.constants.F_OK, (err) => {
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://bibekkoirala07.github.io",
+    methods: "GET,POST,PUT,DELETE",
+  })
+);
 
 const bucketName = process.env.S3_BUCKET_NAME;
 const region = process.env.AWS_REGION;
@@ -80,6 +85,12 @@ async function putObject(fileName, contentType) {
   });
   return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 }
+
+app.get("/get-credentails", (req, res) => {
+  return res
+    .json(200)
+    .json({ data: { accessKeyId, secretAccessKey, bucketName, region } });
+});
 
 app.get("/api/get-all-images", async (req, res) => {
   try {
