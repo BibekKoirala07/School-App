@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(
   cors({
     origin:
-      process.env.NODE_ENV == "production "
+      process.env.NODE_ENV == "production"
         ? process.env.PROD_FRONTEND_URL
         : process.env.DEV_FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -94,7 +94,7 @@ app.get("/get-credentails", (req, res) => {
     data: {
       accessKeyId,
       env:
-        process.env.NODE_ENV == "production "
+        process.env.NODE_ENV == "production"
           ? process.env.PROD_FRONTEND_URL
           : process.env.DEV_FRONTEND_URL,
       secretAccessKey,

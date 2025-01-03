@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Static value for now
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Static value for now
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
