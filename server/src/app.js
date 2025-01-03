@@ -90,9 +90,15 @@ async function putObject(fileName, contentType) {
 }
 
 app.get("/get-credentails", (req, res) => {
-  return res
-    .json(200)
-    .json({ data: { accessKeyId, secretAccessKey, bucketName, region } });
+  return res.status(200).json({
+    data: {
+      accessKeyId,
+      env: process.env.PROD_FRONTEND_URL,
+      secretAccessKey,
+      bucketName,
+      region,
+    },
+  });
 });
 
 app.get("/api/get-all-images", async (req, res) => {
