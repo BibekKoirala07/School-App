@@ -93,7 +93,10 @@ app.get("/get-credentails", (req, res) => {
   return res.status(200).json({
     data: {
       accessKeyId,
-      env: process.env.PROD_FRONTEND_URL,
+      env:
+        process.env.NODE_ENV == "production "
+          ? process.env.PROD_FRONTEND_URL
+          : process.env.DEV_FRONTEND_URL,
       secretAccessKey,
       bucketName,
       region,
