@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 const ImageUploader: React.FC = () => {
   const fullURL = import.meta.env.VITE_PROD_BACKEND_URL;
