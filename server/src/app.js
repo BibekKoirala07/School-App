@@ -27,11 +27,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "https://bibekkoirala07.github.io",
-      "http://localhost:5173",
-      "http://localhost:3000",
-    ],
+    origin:
+      process.env.NODE_ENV == "production "
+        ? process.env.PROD_FRONTEND_URL
+        : process.env.DEV_FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "x-amz-acl", "Authorization"],
     exposedHeaders: ["ETag"],
